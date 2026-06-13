@@ -114,6 +114,13 @@ func handleSpeechV3(c echo.Context, opts types.SpeechRequestOptions) mo.Result[a
 	req.Header.Set("X-Api-Key", token)
 	req.Header.Set("X-Api-Resource-Id", resourceID)
 
+	slog.Info("volcengine v3 request",
+		slog.String("endpoint", "https://openspeech.bytedance.com/api/v3/tts/unidirectional"),
+		slog.String("resource_id", resourceID),
+		slog.String("voice_type", opts.Voice),
+		slog.String("auth_mode", "x-api-key"),
+	)
+
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return mo.Err[any](apierrors.NewErrInternal().WithDetail(err.Error()).WithCaller())
@@ -121,11 +128,7 @@ func handleSpeechV3(c echo.Context, opts types.SpeechRequestOptions) mo.Result[a
 
 	defer func() { _ = resp.Body.Close() }()
 
-	slog.Info("volcengine v3 request",
-		slog.String("endpoint", "https://openspeech.bytedance.com/api/v3/tts/unidirectional"),
-		slog.String("resource_id", resourceID),
-		slog.String("voice_type", opts.Voice),
-		slog.String("auth_mode", "x-api-key"),
+	slog.Info("volcengine v3 response",
 		slog.Int("status", resp.StatusCode),
 		slog.String("logid", resp.Header.Get("X-Tt-Logid")),
 	)
