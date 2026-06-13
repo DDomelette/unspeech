@@ -111,9 +111,7 @@ func handleSpeechV3(c echo.Context, opts types.SpeechRequestOptions) mo.Result[a
 	}
 
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer;"+token)
-	req.Header.Set("X-Api-App-Id", token)
-	req.Header.Set("X-Api-Access-Key", token)
+	req.Header.Set("X-Api-Key", token)
 	req.Header.Set("X-Api-Resource-Id", resourceID)
 
 	resp, err := http.DefaultClient.Do(req)
@@ -127,6 +125,7 @@ func handleSpeechV3(c echo.Context, opts types.SpeechRequestOptions) mo.Result[a
 		slog.String("endpoint", "https://openspeech.bytedance.com/api/v3/tts/unidirectional"),
 		slog.String("resource_id", resourceID),
 		slog.String("voice_type", opts.Voice),
+		slog.String("auth_mode", "x-api-key"),
 		slog.Int("status", resp.StatusCode),
 		slog.String("logid", resp.Header.Get("X-Tt-Logid")),
 	)
