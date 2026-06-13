@@ -111,7 +111,9 @@ func handleSpeechV3(c echo.Context, opts types.SpeechRequestOptions) mo.Result[a
 	}
 
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("X-Api-Key", token)
+	req.Header.Set("Authorization", "Bearer;"+token)
+	req.Header.Set("X-Api-App-Id", token)
+	req.Header.Set("X-Api-Access-Key", token)
 	req.Header.Set("X-Api-Resource-Id", resourceID)
 
 	resp, err := http.DefaultClient.Do(req)
